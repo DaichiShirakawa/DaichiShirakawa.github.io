@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'">
+<title>Tesla 認可コード</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:40rem;margin:2rem auto;padding:0 1rem;line-height:1.6}
+code,textarea{font-family:ui-monospace,monospace}
+textarea{width:100%;height:6rem;font-size:1rem}
+.err{color:#b00}
+</style>
+</head>
+<body>
+<h1>Tesla 認可コード</h1>
+<p>下の <b>code</b> をコピーして、チャットに貼り付けてください。このページはどこにも送信しません。</p>
+<p><label>code<br><textarea id="code" readonly></textarea></label></p>
+<p><button id="copy" type="button">code をコピー</button> <span id="msg"></span></p>
+<p><label>state<br><textarea id="state" readonly style="height:3rem"></textarea></label></p>
+<p id="error" class="err"></p>
+<script>
+(function(){
+  var p = new URLSearchParams(window.location.search);
+  document.getElementById('code').value = p.get('code') || '';
+  document.getElementById('state').value = p.get('state') || '';
+  var e = p.get('error');
+  if (e) { document.getElementById('error').textContent = 'error: ' + e + ' ' + (p.get('error_description') || ''); }
+  else if (!p.get('code')) { document.getElementById('error').textContent = 'code が見つかりません。'; }
+  document.getElementById('copy').addEventListener('click', function(){
+    var t = document.getElementById('code'); t.select();
+    var done = function(){ document.getElementById('msg').textContent = 'コピーしました'; };
+    if (navigator.clipboard) { navigator.clipboard.writeText(t.value).then(done, function(){ document.execCommand('copy'); done(); }); }
+    else { document.execCommand('copy'); done(); }
+  });
+})();
+</script>
+</body>
+</html>
